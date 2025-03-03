@@ -1,0 +1,66 @@
+[project]
+name = "blokus_duo"
+version = "0.1.0"
+description = "Blokus Duo environment for reinforcement learning"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=1.26.0",
+    "gymnasium>=0.29.0",  # Using gymnasium instead of gym as it's the newer version
+    "stable-baselines3>=2.0.0",
+    "torch>=2.0.0",
+    "pyyaml>=6.0",
+    "typer>=0.9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.1.0",
+    "jupyter>=1.0.0",
+    "matplotlib>=3.8.0",
+    "seaborn>=0.13.0",
+    "pandas>=2.1.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+# ターゲットPythonバージョン
+target-version = "py312"
+
+# 有効にするルール
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "N",   # pep8-naming
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "SIM", # flake8-simplify
+    "TCH", # flake8-type-checking
+    "TID", # flake8-tidy-imports
+    "RUF", # ruff-specific rules
+]
+
+# 無視するルール
+ignore = []
+
+# 行の長さ
+line-length = 88
+
+# 自動修正を有効にする
+fix = true
+
+# isort設定
+[tool.ruff.isort]
+known-first-party = ["blokus_duo"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
+python_classes = "Test*"

@@ -1,0 +1,14 @@
+{
+    "include": [
+        "blokus_duo/**/*.py",
+        "tests/**/*.py"
+    ],
+    "exclude": [
+        "**/node_modules",
+        "**/__pycache__"
+    ],
+    "reportMissingImports": true,
+    "reportMissingTypeStubs": false,
+    "pythonVersion": "3.12",
+    "typeCheckingMode": "strict"
+}

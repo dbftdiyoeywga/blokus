@@ -1,0 +1,23 @@
+{
+    "name": "Blokus Duo Development",
+    "image": "mcr.microsoft.com/devcontainers/python:3.12",
+    "postCreateCommand": "pip install uv && uv pip install -e '.[dev]'",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "charliermarsh.ruff"
+            ],
+            "settings": {
+                "python.linting.enabled": true,
+                "python.linting.ruffEnabled": true,
+                "editor.formatOnSave": true,
+                "editor.codeActionsOnSave": {
+                    "source.fixAll.ruff": true,
+                    "source.organizeImports.ruff": true
+                }
+            }
+        }
+    }
+}
