@@ -38,6 +38,32 @@ Blokus Duoプロジェクトは初期実装段階に入りました。Blokus Duo
 
 **重要**: すべての開発作業は必ずdevcontainer内で行う必要があります。これは環境の一貫性と再現性を確保するための絶対的な要件です。
 
+### 開発・テスト環境の使用方法
+
+開発とテストには、docker-composeを使用してdevcontainer環境を起動する必要があります：
+
+```bash
+# devcontainer環境の起動
+docker-compose up -d
+
+# 依存関係のインストール
+docker exec -it blokus-app-1 bash -c "uv pip install -e '.[dev]'"
+
+# テストの実行
+docker exec -it blokus-app-1 bash -c "python -m pytest"
+
+# カバレッジレポート付きでテストを実行
+docker exec -it blokus-app-1 bash -c "python -m pytest --cov=blokus_duo"
+
+# lintチェックの実行
+docker exec -it blokus-app-1 bash -c "ruff check ."
+
+# 型チェックの実行
+docker exec -it blokus-app-1 bash -c "pyright"
+```
+
+これらのコマンドを使用して、一貫した環境でのテストと開発を行ってください。
+
 ## 残りのタスク
 
 1. **ゲームロジックの実装**
@@ -85,6 +111,8 @@ Blokus Duoプロジェクトは初期実装段階に入りました。Blokus Duo
    - **devcontainer環境の再現性確保（最優先事項）**
    - ruffの最適な設定
    - **devcontainer外での開発・テストの禁止**
+   - **lintエラーの解決**: check_devcontainer.pyにいくつかのlintエラーが存在
+   - **型アノテーションの改善**: numpy.ndarrayの型引数が不足しており、多数の型チェックエラーが発生
 
 2. **強化学習関連の課題**
    - 対戦型学習に適した報酬関数の設計

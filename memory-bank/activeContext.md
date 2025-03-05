@@ -97,6 +97,23 @@
 
 devcontainerを使用せずに直接ホスト環境で開発やテストを行うことは避けてください。環境の不一致によるバグや問題の原因となります。
 
+### テスト実行環境
+
+テストを実行するには、docker-composeを使用してdevcontainer環境を起動する必要があります：
+
+```bash
+# devcontainer環境の起動
+docker-compose up -d
+
+# テストの実行
+docker exec -it blokus-app-1 bash -c "python -m pytest"
+
+# カバレッジレポート付きでテストを実行
+docker exec -it blokus-app-1 bash -c "python -m pytest --cov=blokus_duo"
+```
+
+これにより、一貫したテスト環境が保証され、すべての開発者が同じ結果を得ることができます。
+
 ## アクティブな決定と考慮事項
 
 現在、以下の決定と考慮事項が進行中です：
