@@ -1,0 +1,8 @@
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+
+    volumes:
+      - .:/app:cached
+    command: [ "tail", "-f", "/dev/null" ]
