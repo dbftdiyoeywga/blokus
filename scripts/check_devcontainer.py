@@ -5,9 +5,9 @@ This helps ensure that development is happening in the correct environment.
 """
 
 import os
-import sys
 import platform
 import subprocess
+import sys
 
 
 def is_in_devcontainer():
