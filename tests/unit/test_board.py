@@ -1,7 +1,7 @@
 """Tests for the Board class."""
 
-import pytest
 import numpy as np
+
 from blokus_duo.env.board import Board
 
 
