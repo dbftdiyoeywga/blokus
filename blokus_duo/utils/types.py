@@ -1,8 +1,12 @@
 """Type definitions for Blokus Duo."""
 
-from typing import TypedDict, Literal
-import numpy as np
+from typing import Literal, TypedDict, Any, TypeVar, Generic
 
+import numpy as np
+from numpy.typing import NDArray
+
+# Type variables for numpy arrays
+DType = TypeVar('DType')
 
 # Basic types
 Position = tuple[int, int]
@@ -10,12 +14,16 @@ Rotation = int  # 0-7: 回転と反転の組み合わせ
 PieceID = int   # 0-20: 21種類のピース
 PlayerID = int  # 0-1: 2人のプレイヤー
 
+# Numpy array types
+BoardArray = NDArray[np.int32]  # Board representation
+PieceArray = NDArray[np.int32]  # Piece shape representation
+
 
 # Complex types
 class GameState(TypedDict):
     """Game state representation."""
-    board: np.ndarray
-    available_pieces: np.ndarray
+    board: BoardArray
+    available_pieces: NDArray[np.int32]
     current_player: PlayerID
 
 

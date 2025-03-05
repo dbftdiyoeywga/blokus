@@ -25,6 +25,7 @@ venv/
 env/
 ENV/
 .env
+!blokus_duo/env/
 
 # Testing
 .coverage
