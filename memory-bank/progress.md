@@ -48,29 +48,37 @@ Blokus Duoプロジェクトは初期実装段階に入りました。Blokus Duo
 
 ### 開発・テスト環境の使用方法
 
-開発とテストには、docker-composeを使用してdevcontainer環境を起動する必要があります：
+開発とテストには、新しく追加されたMakefileを使用して、環境に応じた適切な方法でコマンドを実行できます：
 
 ```bash
-# devcontainer環境の起動
-docker-compose up -d
+# すべてのテストを実行
+make test
 
-# 依存関係のインストール
-docker exec -it blokus-app-1 bash -c "uv pip install -e '.[dev]'"
-
-# テストの実行
-docker exec -it blokus-app-1 bash -c "python -m pytest"
+# 特定のテストを実行
+make test ARGS="tests/unit/test_board.py"
 
 # カバレッジレポート付きでテストを実行
-docker exec -it blokus-app-1 bash -c "python -m pytest --cov=blokus_duo"
+make test-cov
 
-# lintチェックの実行
-docker exec -it blokus-app-1 bash -c "ruff check ."
+# 特定のテストでカバレッジレポートを生成
+make test-cov ARGS="tests/unit/test_board.py"
 
-# 型チェックの実行
-docker exec -it blokus-app-1 bash -c "pyright"
+# リンティング
+make lint
+
+# 型チェック
+make typecheck
+
+# すべての検証（テスト、リント、型チェック）を実行
+make validate
+
+# 開発環境の確認（単独実行）
+make check-env
+# または
+./scripts/check_devcontainer.py
 ```
 
-これらのコマンドを使用して、一貫した環境でのテストと開発を行ってください。
+Makefileは自動的に実行環境を検出し、devcontainer内で実行されている場合は直接コマンドを実行し、devcontainer外で実行されている場合はDocker Compose経由でコマンドを実行します。これにより、開発者は環境を意識せずに同じコマンドでテストを実行でき、一貫した結果を得ることができます。
 
 ## 残りのタスク
 

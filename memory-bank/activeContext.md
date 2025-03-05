@@ -110,20 +110,32 @@ devcontainerを使用せずに直接ホスト環境で開発やテストを行�
 
 ### テスト実行環境
 
-テストを実行するには、docker-composeを使用してdevcontainer環境を起動する必要があります：
+テストを実行するには、Makefileを使用して環境に応じた適切な方法でコマンドを実行できます：
 
 ```bash
-# devcontainer環境の起動
-docker-compose up -d
+# すべてのテストを実行
+make test
 
-# テストの実行
-docker exec -it blokus-app-1 bash -c "python -m pytest"
+# 特定のテストを実行
+make test ARGS="tests/unit/test_board.py"
 
 # カバレッジレポート付きでテストを実行
-docker exec -it blokus-app-1 bash -c "python -m pytest --cov=blokus_duo"
+make test-cov
+
+# 特定のテストでカバレッジレポートを生成
+make test-cov ARGS="tests/unit/test_board.py"
+
+# リンティング
+make lint
+
+# 型チェック
+make typecheck
+
+# すべての検証（テスト、リント、型チェック）を実行
+make validate
 ```
 
-これにより、一貫したテスト環境が保証され、すべての開発者が同じ結果を得ることができます。
+Makefileは自動的に実行環境を検出し、devcontainer内で実行されている場合は直接コマンドを実行し、devcontainer外で実行されている場合はDocker Compose経由でコマンドを実行します。これにより、開発者は環境を意識せずに同じコマンドでテストを実行でき、一貫した結果を得ることができます。
 
 ## アクティブな決定と考慮事項
 

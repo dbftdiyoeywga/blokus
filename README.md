@@ -100,30 +100,41 @@ blokus/
 
 ### テストの実行
 
+Makefileを使用して、環境に応じた適切な方法でテストを実行できます：
+
 ```bash
 # すべてのテストを実行
-python -m pytest
+make test
 
 # 特定のテストを実行
-python -m pytest tests/unit/test_board.py
+make test ARGS="tests/unit/test_board.py"
 
 # カバレッジレポートを生成
-python -m pytest --cov=blokus_duo
+make test-cov
+
+# 特定のテストでカバレッジレポートを生成
+make test-cov ARGS="tests/unit/test_board.py"
 ```
 
 ### コード品質チェック
 
 ```bash
-# 開発環境の確認
-./scripts/check_devcontainer.py
-
-# ruffによるリンティングとフォーマット
-ruff check .
-ruff format .
+# リンティング
+make lint
 
 # 型チェック
-pyright
+make typecheck
+
+# すべての検証（テスト、リント、型チェック）を実行
+make validate
+
+# 開発環境の確認（単独実行）
+make check-env
+# または
+./scripts/check_devcontainer.py
 ```
+
+Makefileは自動的に実行環境を検出し、devcontainer内またはDocker Compose経由で適切にコマンドを実行します。
 
 ## 環境の使用例
 
