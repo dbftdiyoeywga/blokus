@@ -121,18 +121,30 @@ class BlokusDuoEnv(gym.Env):
 
         # Check if the action is valid
         if not self._is_valid_action(piece_id, rotation, position):
+            # Check if the game is over
+            done = self.board.is_game_over()
+
+            # Prepare the info dictionary
+            info = {"invalid_action": True}
+
+            # Add final scores if the game is over
+            if done:
+                scores = [self.board.calculate_score(p) for p in range(2)]
+                info["final_scores"] = scores
+
             # Invalid action, return negative reward and current observation
-            return self._get_observation(), -10.0, False, {"invalid_action": True}
+            return self._get_observation(), -10.0, done, info
 
         # Get the piece shape
         piece_shape = self.pieces[piece_id].rotate(rotation)
         piece_size = np.sum(piece_shape)
 
         # Place the piece on the board
-        self.board.place_piece(piece_shape, position, self.current_player)
+        success = self.board.place_piece(piece_shape, position, self.current_player)
 
-        # Remove the piece from the available pieces
-        self.available_pieces[self.current_player].remove(piece_id)
+        # If the piece was placed successfully, remove it from the available pieces
+        if success:
+            self.available_pieces[self.current_player].remove(piece_id)
 
         # Calculate the reward
         reward_info = self._get_reward(piece_size, action)
