@@ -56,6 +56,11 @@
    - Piece クラスの実装と21種類の標準ピース定義
    - 型アノテーションの改善（numpy.ndarrayの型引数を追加）
    - .gitignoreの更新（blokus_duo/env/ディレクトリを含めるように）
+   - Blokusゲームルールの実装
+     - コーナー接続ルール（corner-to-corner connection）
+     - エッジ接続禁止ルール（no edge-to-edge connection）
+     - ゲーム終了判定
+     - スコア計算
 
 ## 次のステップ
 

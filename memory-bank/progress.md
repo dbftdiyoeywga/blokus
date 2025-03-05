@@ -38,6 +38,11 @@ Blokus Duoプロジェクトは初期実装段階に入りました。Blokus Duo
 6. Piece クラスの実装とテスト作成完了
 7. 21種類の標準ピース定義の実装完了
 8. 型アノテーションの改善（numpy.ndarrayの型引数を追加）
+9. Blokusゲームルールの実装完了
+   - コーナー接続ルール（corner-to-corner connection）
+   - エッジ接続禁止ルール（no edge-to-edge connection）
+   - ゲーム終了判定
+   - スコア計算
 
 **重要**: すべての開発作業は必ずdevcontainer内で行う必要があります。これは環境の一貫性と再現性を確保するための絶対的な要件です。
 
