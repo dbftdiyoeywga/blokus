@@ -5,6 +5,7 @@ for reinforcement learning.
 """
 
 from blokus_duo.env.board import Board
-from blokus_duo.env.pieces import Piece, get_all_pieces
+from blokus_duo.env.pieces import Piece, create_standard_pieces
+from blokus_duo.env.blokus_duo_env import BlokusDuoEnv
 
-__all__ = ["Board", "Piece", "get_all_pieces"]
+__all__ = ["Board", "Piece", "create_standard_pieces", "BlokusDuoEnv"]

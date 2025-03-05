@@ -138,24 +138,53 @@ Makefileは自動的に実行環境を検出し、devcontainer内またはDocker
 
 ## 環境の使用例
 
+### 基本的な使用方法
+
 ```python
-import gymnasium as gym
-import blokus_duo
+from blokus_duo.env import BlokusDuoEnv
 
 # 環境の作成
-env = gym.make('blokus_duo/BlokusDuo-v0')
+env = BlokusDuoEnv()
 
 # 環境のリセット
-observation = env.reset()
+observation, info = env.reset()
 
 # ゲームのステップ実行
-for _ in range(100):
-    action = env.action_space.sample()  # ランダムアクション
+done = False
+while not done:
+    # アクションの定義（ピースID、回転、位置）
+    action = {
+        "piece_id": 0,  # 1x1のピース
+        "rotation": 0,  # 回転なし
+        "position": (4, 4)  # プレイヤー0の開始位置
+    }
+
+    # ステップの実行
     observation, reward, done, info = env.step(action)
 
-    if done:
-        observation = env.reset()
+    # 環境のレンダリング
+    env.render()
 ```
+
+### ランダムエージェントの例
+
+`examples/random_agent.py`スクリプトは、ランダムな行動を選択するエージェントを使用してBlokus Duoをプレイする例を提供します：
+
+```bash
+# ランダムエージェントの実行
+python examples/random_agent.py
+```
+
+### StableBaselines3との連携例
+
+`examples/sb3_agent.py`スクリプトは、StableBaselines3を使用して強化学習エージェントを訓練する例を提供します：
+
+```bash
+# StableBaselines3エージェントの訓練と評価
+python examples/sb3_agent.py
+```
+
+このスクリプトは、BlokusDuoEnvをStableBaselines3と互換性のあるGym環境にラップし、PPOアルゴリズムを使用してエージェントを訓練します。
 
 ## 貢献ガイドライン
 
