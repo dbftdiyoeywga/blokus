@@ -88,6 +88,38 @@ def test_invalid_action():
     assert info.get("invalid_action", False)  # Invalid action flag
 
 
+def test_env_first_move_must_cover_starting_position():
+    """Test that the first move must cover the starting position."""
+    # Arrange
+    env = BlokusDuoEnv()
+    env.reset()
+
+    # Create a piece that doesn't cover the starting position (4, 4)
+    invalid_action = {
+        "piece_id": 0,  # 1x1 piece
+        "rotation": 0,
+        "position": (3, 3)  # Doesn't cover (4, 4)
+    }
+
+    # Create a piece that covers the starting position (4, 4)
+    valid_action = {
+        "piece_id": 0,  # 1x1 piece
+        "rotation": 0,
+        "position": (4, 4)  # Covers (4, 4)
+    }
+
+    # Act & Assert
+    # Invalid action
+    obs1, reward1, done1, info1 = env.step(invalid_action)
+    assert reward1 < 0  # Negative reward
+    assert info1.get("invalid_action", False)  # Invalid action flag
+
+    # Valid action
+    obs2, reward2, done2, info2 = env.step(valid_action)
+    assert reward2 > 0  # Positive reward
+    assert not info2.get("invalid_action", False)  # Not an invalid action
+
+
 def test_game_over():
     """Test that the game ends correctly."""
     # Arrange
