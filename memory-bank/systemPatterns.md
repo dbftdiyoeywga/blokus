@@ -66,6 +66,98 @@
        return True
    ```
 
+2. **初手制限ルールの実装例（TDDアプローチ）**
+   ```python
+   # 1. Red: 失敗するテストを書く
+   def test_covers_starting_position_valid(board_size):
+       """Test that a piece covering the starting position is valid."""
+       # Arrange
+       board = Board(board_size)
+       position = (3, 3)  # Position where the piece will cover (4, 4)
+       piece_shape = np.array([[0, 0, 0],
+                               [0, 1, 0],
+                               [0, 0, 0]])  # Piece that will cover (4, 4)
+       player = 0
+
+       # Act
+       result = board._covers_starting_position(piece_shape, position, player)
+
+       # Assert
+       assert result is True
+
+   def test_is_valid_position_first_move_covers_starting_position(board_size):
+       """Test that the first move covering the starting position is valid."""
+       # Arrange
+       board = Board(board_size)
+       position = (3, 3)  # Position where the piece will cover (4, 4)
+       piece_shape = np.array([[0, 0, 0],
+                               [0, 1, 0],
+                               [0, 0, 0]])  # Piece that will cover (4, 4)
+       player = 0
+
+       # Act
+       result = board.is_valid_position(piece_shape, position, player)
+
+       # Assert
+       assert result is True
+
+   # 2. Green: 実装
+   def _covers_starting_position(self, piece_shape: PieceArray, position: Position, player: int) -> bool:
+       """Check if a piece covers the starting position for a player."""
+       start_pos = self.starting_positions[player]
+
+       # Calculate all cells covered by the piece
+       for i in range(piece_shape.shape[0]):
+           for j in range(piece_shape.shape[1]):
+               if piece_shape[i, j] == 1:
+                   cell_pos = (position[0] + i, position[1] + j)
+                   if cell_pos == start_pos:
+                       return True
+
+       return False
+
+   # is_valid_position メソッドの修正
+   # 修正前
+   if self.is_first_move[player] and not self._is_at_starting_position(position, player):
+       return False
+
+   # 修正後
+   if self.is_first_move[player] and not self._covers_starting_position(piece_shape, position, player):
+       return False
+
+   # 3. Refactor: 環境レベルでのテスト追加
+   def test_env_first_move_must_cover_starting_position():
+       """Test that the first move must cover the starting position."""
+       # Arrange
+       env = BlokusDuoEnv()
+       env.reset()
+
+       # Create a piece that doesn't cover the starting position (4, 4)
+       invalid_action = {
+           "piece_id": 0,  # 1x1 piece
+           "rotation": 0,
+           "position": (3, 3)  # Doesn't cover (4, 4)
+       }
+
+       # Create a piece that covers the starting position (4, 4)
+       valid_action = {
+           "piece_id": 0,  # 1x1 piece
+           "rotation": 0,
+           "position": (4, 4)  # Covers (4, 4)
+       }
+
+       # Act & Assert
+       # Invalid action
+       obs1, reward1, done1, info1 = env.step(invalid_action)
+       assert reward1 < 0  # Negative reward
+       assert info1.get("invalid_action", False)  # Invalid action flag
+
+       # Valid action
+       obs2, reward2, done2, info2 = env.step(valid_action)
+       assert reward2 > 0  # Positive reward
+       assert not info2.get("invalid_action", False)  # Not an invalid action
+   ```
+
 2. **Python 3.12の型ヒントの活用**
    ```python
    # Python 3.12では型ヒントの構文が改善されています
