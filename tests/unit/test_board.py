@@ -72,6 +72,40 @@ def test_is_at_starting_position_invalid(board_size):
     assert result is False
 
 
+def test_covers_starting_position_valid(board_size):
+    """Test that a piece covering the starting position is valid."""
+    # Arrange
+    board = Board(board_size)
+    position = (3, 3)  # Position where the piece will cover (4, 4)
+    piece_shape = np.array([[0, 0, 0],
+                            [0, 1, 0],
+                            [0, 0, 0]])  # Piece that will cover (4, 4)
+    player = 0
+
+    # Act
+    result = board._covers_starting_position(piece_shape, position, player)
+
+    # Assert
+    assert result is True
+
+
+def test_covers_starting_position_invalid(board_size):
+    """Test that a piece not covering the starting position is invalid."""
+    # Arrange
+    board = Board(board_size)
+    position = (3, 3)  # Position where the piece won't cover (4, 4)
+    piece_shape = np.array([[1, 0, 0],
+                            [0, 0, 0],
+                            [0, 0, 0]])  # Piece that won't cover (4, 4)
+    player = 0
+
+    # Act
+    result = board._covers_starting_position(piece_shape, position, player)
+
+    # Assert
+    assert result is False
+
+
 def test_is_valid_position_first_move_at_starting_position(board_size):
     """Test that the first move at a starting position is valid."""
     # Arrange
@@ -93,6 +127,40 @@ def test_is_valid_position_first_move_not_at_starting_position(board_size):
     board = Board(board_size)
     position = (5, 5)  # Not a starting position
     piece_shape = np.array([[1]])  # Single cell piece
+    player = 0
+
+    # Act
+    result = board.is_valid_position(piece_shape, position, player)
+
+    # Assert
+    assert result is False
+
+
+def test_is_valid_position_first_move_covers_starting_position(board_size):
+    """Test that the first move covering the starting position is valid."""
+    # Arrange
+    board = Board(board_size)
+    position = (3, 3)  # Position where the piece will cover (4, 4)
+    piece_shape = np.array([[0, 0, 0],
+                            [0, 1, 0],
+                            [0, 0, 0]])  # Piece that will cover (4, 4)
+    player = 0
+
+    # Act
+    result = board.is_valid_position(piece_shape, position, player)
+
+    # Assert
+    assert result is True
+
+
+def test_is_valid_position_first_move_not_covers_starting_position(board_size):
+    """Test that the first move not covering the starting position is invalid."""
+    # Arrange
+    board = Board(board_size)
+    position = (3, 3)  # Position where the piece won't cover (4, 4)
+    piece_shape = np.array([[1, 0, 0],
+                            [0, 0, 0],
+                            [0, 0, 0]])  # Piece that won't cover (4, 4)
     player = 0
 
     # Act
