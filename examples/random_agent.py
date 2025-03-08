@@ -89,4 +89,4 @@ if __name__ == "__main__":
     np.random.seed(42)
 
     # Play a game
-    play_game("human")
+    play_game()
