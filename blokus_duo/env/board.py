@@ -65,6 +65,29 @@ class Board:
         """
         return position == self.starting_positions[player]
 
+    def _covers_starting_position(self, piece_shape: PieceArray, position: Position, player: int) -> bool:
+        """Check if a piece covers the starting position for a player.
+
+        Args:
+            piece_shape: The shape of the piece as a 2D numpy array
+            position: The position (row, col) to place the piece
+            player: The player (0 or 1)
+
+        Returns:
+            True if the piece covers the starting position, False otherwise
+        """
+        start_pos = self.starting_positions[player]
+
+        # Calculate all cells covered by the piece
+        for i in range(piece_shape.shape[0]):
+            for j in range(piece_shape.shape[1]):
+                if piece_shape[i, j] == 1:
+                    cell_pos = (position[0] + i, position[1] + j)
+                    if cell_pos == start_pos:
+                        return True
+
+        return False
+
     def _overlaps_existing_pieces(self, piece_shape: np.ndarray, position: Tuple[int, int]) -> bool:
         """Check if a piece overlaps with existing pieces on the board.
 
@@ -252,8 +275,8 @@ class Board:
         if self._overlaps_existing_pieces(piece_shape, position):
             return False
 
-        # Check if it's the first move and at the starting position
-        if self.is_first_move[player] and not self._is_at_starting_position(position, player):
+        # Check if it's the first move and the piece covers the starting position
+        if self.is_first_move[player] and not self._covers_starting_position(piece_shape, position, player):
             return False
 
         # If not the first move, check for corner-to-corner connection
