@@ -158,3 +158,26 @@ def test_multiple_turns():
     assert obs3["available_pieces"][1, 0] == 0  # Player 1's piece 0 is used
     assert np.sum(obs3["board"] == 1) >= 1  # Player 0 has at least 1 cell
     assert np.sum(obs3["board"] == 2) == 1  # Player 1 has 1 cell
+
+
+def test_skip_action():
+    """Test that skip actions are handled correctly."""
+    # Arrange
+    env = BlokusDuoEnv()
+    env.reset()
+
+    # Act - Player 0 skips
+    skip_action = {"skip": True}
+    obs1, reward1, done1, info1 = env.step(skip_action)
+
+    # Assert
+    assert obs1["current_player"] == 1  # Switched to player 1
+    assert not done1  # Game not over yet
+    assert info1.get("skipped", False)  # Skip flag in info
+
+    # Act - Player 1 skips
+    obs2, reward2, done2, info2 = env.step(skip_action)
+
+    # Assert
+    assert done2  # Game should be over when both players skip
+    assert "final_scores" in info2

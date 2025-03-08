@@ -9,21 +9,21 @@ from blokus_duo.env.blokus_duo_env import BlokusDuoEnv
 from blokus_duo.utils.types import ActionInfo
 
 
-def random_agent(env: BlokusDuoEnv) -> Optional[Dict[str, Any]]:
+def random_agent(env: BlokusDuoEnv) -> Dict[str, Any]:
     """Get a random valid action for the current player.
 
     Args:
         env: The Blokus Duo environment
 
     Returns:
-        A random valid action, or None if there are no valid actions
+        A random valid action, or a skip action if there are no valid actions
     """
     # Get all valid actions
     valid_actions = env._get_valid_actions()
 
-    # If there are no valid actions, return None
+    # If there are no valid actions, return a skip action
     if not valid_actions:
-        return None
+        return {"skip": True}
 
     # Return a random valid action
     return np.random.choice(valid_actions)
@@ -56,16 +56,12 @@ def play_game(render_mode: str = "ansi", delay: float = 0.5) -> None:
         # Get a random action
         action = random_agent(env)
 
-        # If there are no valid actions, skip the player's turn
-        if action is None:
-            print(f"Player {current_player} has no valid moves, skipping turn.")
-            # Switch to the next player
-            observation["current_player"] = 1 - current_player
-            continue
-
         # Print the action
-        print(f"Player {current_player} plays piece {action['piece_id']} "
-              f"with rotation {action['rotation']} at position {action['position']}")
+        if action.get("skip", False):
+            print(f"Player {current_player} has no valid moves, skipping turn.")
+        else:
+            print(f"Player {current_player} plays piece {action['piece_id']} "
+                  f"with rotation {action['rotation']} at position {action['position']}")
 
         # Take a step
         observation, reward, done, info = env.step(action)
@@ -93,4 +89,4 @@ if __name__ == "__main__":
     np.random.seed(42)
 
     # Play a game
-    play_game()
+    play_game("human")

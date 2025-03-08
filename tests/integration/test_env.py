@@ -22,14 +22,6 @@ def test_env_with_random_agent():
         # Get a random action
         action = _get_random_valid_action(env)
 
-        # If there are no valid actions, end the game
-        if action is None:
-            print("No valid actions available, ending game.")
-            done = True  # Mark the game as done
-            # Add final scores to info
-            info = {"final_scores": [env.board.calculate_score(p) for p in range(2)]}
-            break
-
         # Take a step
         observation, reward, done, info = env.step(action)
         steps += 1
@@ -70,14 +62,6 @@ def test_env_full_game():
         # Get a random action
         action = _get_random_valid_action(env)
 
-        # If there are no valid actions, end the game
-        if action is None:
-            print("No valid actions available, ending game.")
-            done = True  # Mark the game as done
-            # Add final scores to info
-            info = {"final_scores": [env.board.calculate_score(p) for p in range(2)]}
-            break
-
         # Take a step
         observation, reward, done, info = env.step(action)
         steps += 1
@@ -112,9 +96,9 @@ def _get_random_valid_action(env):
     # Get all valid actions
     valid_actions = env._get_valid_actions()
 
-    # If there are no valid actions, return None
+    # If there are no valid actions, return a skip action
     if not valid_actions:
-        return None
+        return {"skip": True}
 
     # Return a random valid action
     return np.random.choice(valid_actions)

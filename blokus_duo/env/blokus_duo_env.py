@@ -37,6 +37,9 @@ class BlokusDuoEnv(gym.Env):
         # Initialize the current player
         self.current_player: PlayerID = 0
 
+        # Track if the last action was a skip
+        self.last_action_skip = False
+
         # Define the observation space
         self.observation_space = spaces.Dict(
             {
@@ -93,6 +96,9 @@ class BlokusDuoEnv(gym.Env):
         # Reset the current player
         self.current_player = 0
 
+        # Reset the skip action flag
+        self.last_action_skip = False
+
         # Get the initial observation
         observation = self._get_observation()
 
@@ -107,6 +113,7 @@ class BlokusDuoEnv(gym.Env):
                 - piece_id: The ID of the piece to place (0-20)
                 - rotation: The rotation to apply (0-7)
                 - position: The position (row, col) to place the piece
+                - skip: If True, the player skips their turn (no valid moves)
 
         Returns:
             observation: The new observation
@@ -114,6 +121,23 @@ class BlokusDuoEnv(gym.Env):
             done: Whether the episode is done
             info: Additional information
         """
+        # Handle skip action
+        if action is None or action.get("skip", False):
+            # If the previous action was also a skip, end the game
+            if self.last_action_skip:
+                done = True
+                scores = [self.board.calculate_score(p) for p in range(2)]
+                info = {"final_scores": scores, "skipped": True}
+                return self._get_observation(), 0.0, done, info
+
+            # Set the skip flag and switch to the next player
+            self.last_action_skip = True
+            self.current_player = 1 - self.current_player
+            return self._get_observation(), 0.0, False, {"skipped": True}
+
+        # Reset the skip flag for normal actions
+        self.last_action_skip = False
+
         # Extract the action components
         piece_id = cast(PieceID, action["piece_id"])
         rotation = cast(Rotation, action["rotation"])

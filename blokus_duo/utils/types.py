@@ -27,11 +27,12 @@ class GameState(TypedDict):
     current_player: PlayerID
 
 
-class ActionInfo(TypedDict):
+class ActionInfo(TypedDict, total=False):
     """Information about an action."""
     piece_id: PieceID
     position: Position
     rotation: Rotation
+    skip: bool  # Flag to indicate a skip action
 
 
 class RewardInfo(TypedDict):
